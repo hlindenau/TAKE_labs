@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Ajax, jQuery, ASP.NET Web Api</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+</head>
+<body>
+    <script type="text/javascript">
+        function APICall() {
+        var xhttp = new XMLHttpRequest();
+        
+        var x = document.getElementById("x").value;
+        var y = document.getElementById("y").value;
+
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('response', this.response.sum);
+                document.getElementById("sum").textContent = this.response.sum;
+                document.getElementById("difference").textContent = this.response.difference;
+                document.getElementById("product").textContent = this.response.product;
+                document.getElementById("quotient").textContent = this.response.quotient;
+            }
+        };
+        var url = "/math?x=" + x + "&y=" + y;
+        xhttp.responseType = 'json';
+        xhttp.open("GET", url, true);
+        xhttp.send(null);
+
+        }
+
+
+        $(document).ready(function () {
+            $("#calc").click(function () {
+                var x = $("input#x").val();
+            var y = $("input#y").val();
+                $.ajax({
+                    type: "GET",
+                    data: { x, y },
+                    url: "/math",
+                    success: resp => {
+                        $("span#sum").text(resp.sum)
+                        $("span#difference").text(resp.difference)
+                        $("span#product").text(resp.product)
+                        $("span#quotient").text(resp.quotient)
+                    }
+                });
+            });
+        });
+    </script>
+    <div>
+        <h1>Calculations</h1>
+        <form>
+            x = <input type="text" id="x" />
+            y = <input type="text" id="y" />
+            <input type="button" id="calc" value="Call Api(jQuery)" />
+            <input type="button" id="calc2" value="Call Api(vanilla js)" onclick="APICall()" />
+        </form>
+        x + y = <span id="sum"></span><br />
+        x - y = <span id="difference"></span><br />
+        x * y = <span id="product"></span><br />
+        x / y = <span id="quotient"></span><br />
+    </div>
+
+</body>
+</html>
